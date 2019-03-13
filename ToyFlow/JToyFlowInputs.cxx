@@ -22,6 +22,10 @@ JToyFlowInputs& JToyFlowInputs::operator=(const JToyFlowInputs& obj){
 //______________________________________________________________________________
 void JToyFlowInputs::Load(){
 	// vn data
+	//Read flow coefficients ----------------------------
+	const char *pgn[3] = {"Hist1D_y1","Hist1D_y1_e1","Hist1D_y1_e2"};
+	const char *pglabel[4] = {"Hist1D_y%u","Hist1D_y%u_e1","Hist1D_y%u_e2plus", "Hist1D_y%u_e2minus"};
+
 	for(uint i = 0; i < N_VN; ++i){
 		TH1D *pgr[N_VN];//[3];
 		for(uint j = 0; j < 2; ++j)

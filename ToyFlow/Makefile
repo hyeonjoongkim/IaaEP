@@ -13,9 +13,9 @@ LDFLAGS  = $(shell root-config --libs)
 
 CXXFLAGS  += $(INCS)
 
-HDRSDICT = JToyFlowHistos.h 
+HDRSDICT = JToyFlowInputs.h 
            
-HDRS	+= $(HDRSDICT)	JToyFlowInputs.h \
+HDRS	+= $(HDRSDICT)	JToyFlowHistos.h \
                         nanoDict.h
 
 
@@ -24,7 +24,7 @@ OBJS = $(HDRS:.h=.o)
 
 all:            $(PROGRAM)
 
-$(PROGRAM):     $(OBJS) JConst.h $(PROGRAM).C
+$(PROGRAM):     $(OBJS)  $(PROGRAM).C
 		@echo "Linking $(PROGRAM) ..."
 		$(CXX) -lEG -lPhysics -L$(PWD) $(PROGRAM).C $(CXXFLAGS) $(OBJS) $(LDFLAGS) -o $(PROGRAM)
 		@echo "done"
