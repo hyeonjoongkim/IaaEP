@@ -1,5 +1,4 @@
 PROGRAM       = JToyFlowMain
-
 version       = JTKT
 CXX           = g++
 CXXFLAGS      = -g -Wall   -Wno-deprecated -D$(version) 

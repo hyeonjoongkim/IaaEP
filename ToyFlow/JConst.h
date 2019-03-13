@@ -1,3 +1,6 @@
+#ifndef JCONST_H
+#define JCONST_H
+
 #define NC 6
 static double CentBins[NC+3] = {0,5,10,20,30,40,50, 60, 70};
 
@@ -26,3 +29,5 @@ enum RESOLUTION{
 	R_COUNT
 };
 static const char *presn[] = {"V0A","V0C","V0P"};
+
+#endif

@@ -1,7 +1,6 @@
-/===========================================================
+//===========================================================
 // JToyFlowInputs.h
 //===========================================================
-
 #ifndef JTOYFLOWINPUTS_H
 #define JTOYFLOWINPUTS_H
 
@@ -10,11 +9,13 @@
 #include <TRandom.h>
 #include <TFile.h>
 #include <TF1.h>
+#include <TGraph.h>
 #include <TGraphErrors.h>
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TComplex.h>
 #include "JConst.h"
+using namespace std;
 
 #define N_VN 2
 #define ETADST_N 36
@@ -51,8 +52,8 @@ public:
   JToyFlowInputs& operator=(const JToyFlowInputs& obj); 
   
   void Load();
-  int GetMultiplicity(double cent);
-  double GetVn(int ih, double cent);
+  int GetMultiplicity(int iD, double cent){ return pgr_nch[iD]->Eval(cent); };
+  double GetVn(int ih, double cent){ return pgr_v[ih]->Eval(cent); };
 
 
 public:

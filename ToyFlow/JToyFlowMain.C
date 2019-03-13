@@ -7,8 +7,9 @@
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TComplex.h>
-#include "JConst.h"
 #include "JToyFlowHistos.h"
+#include "JToyFlowInputs.h"
+double CheckDetectorPhi(double phi);
 
 typedef unsigned int uint;
 
@@ -33,9 +34,7 @@ int main(int argc, char **pargv){
 
 	JToyFlowInputs *jflowinputs = new JToyFlowInputs();
 	jflowinputs->Load(); // dN/deta and vn as a function of centrality
-	// jflowinputs->GetMultiplicity(cent);
-	// jflowinputs->GetVn(cert, n);
-
+	
 	// Need to get Multiplicity and vn based on the measured data.
 	// ALICE dN/deta vn
 	double vn[2];
@@ -43,11 +42,10 @@ int main(int argc, char **pargv){
 	for(uint evt = 0; evt < evtc; ++evt){
 		//Event generation ----------------------------
 		double cent = prng->Uniform(0,50.0);
-		double Multiplicity = jflowinputs->GetMultiplicity(cent);
-		v[0]=  jflowinputs->GetVn(0,cent); 
-		v[1]=  jflowinputs->GetVn(1,cent);
-		pdf->SetParameter(2,v[0]); //v2 = pgr_v[0]->Eval(cent);
-		pdf->SetParameter(3,v[1]); //v3 [1]
+		vn[0]=  jflowinputs->GetVn(0,cent); 
+		vn[1]=  jflowinputs->GetVn(1,cent);
+		pdf->SetParameter(2,vn[0]); //v2 = pgr_v[0]->Eval(cent);
+		pdf->SetParameter(3,vn[1]); //v3 [1]
 		pdf->SetParameter(4,0.01); //v4
 
 		pdf->SetParameter(5,prng->Uniform(-pi,pi));  //EP for v1
@@ -66,7 +64,7 @@ int main(int argc, char **pargv){
     	std::vector <double> trackphi[D_COUNT];
 		TComplex Qsd[D_COUNT];
 		for(uint s = 0; s < D_COUNT; ++s){
-			uint ntracks = (uint)pgr_nch[s]->Eval(cent) *0.9;
+			uint ntracks = jflowinputs->GetMultiplicity(s,cent);
 
 			TComplex Qa2 = TComplex(0,0);
 			for(uint i = 0; i < ntracks; ++i){
@@ -114,5 +112,17 @@ int main(int argc, char **pargv){
 
 	} // end of event loop
 	return 0;
+}
+
+double CheckDetectorPhi(double phi) {
+
+  double pi = TMath::Pi();
+  double angle[8] = {-3*pi/4, -1*pi/2, -1*pi/4, 0, pi/4, pi/2, 3*pi/4, pi};
+  double medianangle[8] = {-7*pi/8, -5*pi/8, -3*pi/8, -1*pi/8, pi/8, 3*pi/8, 5*pi/8, 7*pi/8};
+  int i = 0;
+  for ( ; i < 8; i++) {
+    if (phi < angle[i]) break;
+  }
+  return medianangle[i];
 }
 

@@ -52,11 +52,3 @@ void JToyFlowInputs::Load(){
 	}
 }
 
-int GetMultiplicity(int iD, double cent){
-	return pgr_nch[iD]->Eval(cent);
-}
-
-double GetVn(int ih, int cent){
-	return pgr_v[ih]->Eval(cent);
-}
-
