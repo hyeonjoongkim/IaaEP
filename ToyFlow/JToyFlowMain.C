@@ -18,7 +18,7 @@ int main(int argc, char **pargv){
 	uint seed = argc > 1?atol(pargv[1]):1000;
 	uint evtc = argc > 2?atol(pargv[2]):1000;
 	printf("seed:\t%u\nevents:\t%u\n",seed,evtc);
-	//TFile *pfo = new TFile(argc > 3?pargv[3]:"results.root","recreate");
+	TFile *pfo = new TFile(argc > 3?pargv[3]:"results.root","recreate");
 
 	// Define PDF based on F.A
 	double pi = TMath::Pi();
