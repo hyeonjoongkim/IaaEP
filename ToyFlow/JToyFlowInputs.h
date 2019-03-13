@@ -1,3 +1,10 @@
+/===========================================================
+// JToyFlowInputs.h
+//===========================================================
+
+#ifndef JTOYFLOWINPUTS_H
+#define JTOYFLOWINPUTS_H
+
 #include <stdio.h>
 #include <vector>
 #include <TRandom.h>
@@ -9,6 +16,7 @@
 #include <TComplex.h>
 #include "JConst.h"
 
+#define N_VN 2
 #define ETADST_N 36
 static double etadst[ETADST_N] = {
 	-3.8, //underflow
@@ -30,8 +38,32 @@ static double etanch[NC+2][ETADST_N] = {
 	{177,178,179.9,181.7,186,188.2,189.8,193.5,196.4,196.5,194.8,191.4,187.5,184.3,182.5,182.5,184.3,187.5,191.4,194.8,196.5,196.4,193.5,189.8,188.2,186,181.7,179.9,178,163.2,153.4,143.8,140.3,138.7,136,135},
 	{93,94.9,96.1,96.8,98.3,98.8,99.1,101.2,102.7,103.1,102,100.3,98,96.1,95.2,95.2,96.1,98,100.3,102,103.1,102.7,101.2,99.1,98.8,98.3,96.8,96.1,94.9,86.8,81.9,77.3,75.8,75.1,73.8,73}
 };
-TGraph *pgr_nch[D_COUNT];
-#define N_VN 2
-TGraphErrors *pgr_v[N_VN];
+//Read flow coefficients ----------------------------
+const char *pgn[3] = {"Hist1D_y1","Hist1D_y1_e1","Hist1D_y1_e2"};
+const char *pglabel[4] = {"Hist1D_y%u","Hist1D_y%u_e1","Hist1D_y%u_e2plus", "Hist1D_y%u_e2minus"};
+
+class JToyFlowInputs {
+
+public:
+  JToyFlowInputs(); 
+  virtual ~JToyFlowInputs(){;}	  //destructor
+  JToyFlowInputs(const JToyFlowInputs& obj);
+  JToyFlowInputs& operator=(const JToyFlowInputs& obj); 
+  
+  void Load();
+  int GetMultiplicity(double cent);
+  double GetVn(int ih, double cent);
+
+
+public:
+	TFile *pff;
+	TGraph *pgr_nch[D_COUNT];
+	TGraphErrors *pgr_v[N_VN];
+	TH1D *pgr[N_VN];
+
+};
+
+#endif
+
 
 

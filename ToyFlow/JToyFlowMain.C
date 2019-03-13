@@ -44,8 +44,8 @@ int main(int argc, char **pargv){
 		//Event generation ----------------------------
 		double cent = prng->Uniform(0,50.0);
 		double Multiplicity = jflowinputs->GetMultiplicity(cent);
-		v[0]=  jflowinputs->GetVn(cent, 2); 
-		v[1]=  jflowinputs->GetVn(cent, 3);
+		v[0]=  jflowinputs->GetVn(0,cent); 
+		v[1]=  jflowinputs->GetVn(1,cent);
 		pdf->SetParameter(2,v[0]); //v2 = pgr_v[0]->Eval(cent);
 		pdf->SetParameter(3,v[1]); //v3 [1]
 		pdf->SetParameter(4,0.01); //v4
@@ -84,9 +84,9 @@ int main(int argc, char **pargv){
       		double recoevp = TMath::ATan2(Qsd[s].Im(), Qsd[s].Re())/2;
       		double evpdiff = trueevp - recoevp;
       
-      		evph[s][cid]->Fill(recoevp);
-      		evpcorr2d[s][cid]->Fill(trueevp, recoevp);
-      		evpdifference[s][cid]->Fill(evpdiff);
+      		jhistos->evph[s][cid]->Fill(recoevp);
+      		jhistos->evpcorr2d[s][cid]->Fill(trueevp, recoevp);
+      		jhistos->evpdifference[s][cid]->Fill(evpdiff);
     	}
 
 		//Calculate the resolution components
@@ -94,23 +94,23 @@ int main(int argc, char **pargv){
 		ab = Qsd[D_V0A]*TComplex::Conjugate(Qsd[D_TPC_ETAA]);
 		ac = Qsd[D_V0A]*TComplex::Conjugate(Qsd[D_TPC_ETAC]);
 		bc = Qsd[D_TPC_ETAA]*TComplex::Conjugate(Qsd[D_TPC_ETAC]);
-		pah[R_V0A][cid]->Fill(ab.Re());
-		pbh[R_V0A][cid]->Fill(ac.Re());
-		pch[R_V0A][cid]->Fill(bc.Re());
+		jhistos->pah[R_V0A][cid]->Fill(ab.Re());
+		jhistos->pbh[R_V0A][cid]->Fill(ac.Re());
+		jhistos->pch[R_V0A][cid]->Fill(bc.Re());
 
 		ab = Qsd[D_V0C]*TComplex::Conjugate(Qsd[D_TPC_ETAA]);
 		ac = Qsd[D_V0C]*TComplex::Conjugate(Qsd[D_TPC_ETAC]);
 		//bc = Qsd[D_TPC_ETAA]*TComplex::Conjugate(Qsd[D_TPC]);
-		pah[R_V0C][cid]->Fill(ab.Re());
-		pbh[R_V0C][cid]->Fill(ac.Re());
-		pch[R_V0C][cid]->Fill(bc.Re());
+		jhistos->pah[R_V0C][cid]->Fill(ab.Re());
+		jhistos->pbh[R_V0C][cid]->Fill(ac.Re());
+		jhistos->pch[R_V0C][cid]->Fill(bc.Re());
 
 		ab = Qsd[D_V0P]*TComplex::Conjugate(Qsd[D_TPC_ETAA]);
 		ac = Qsd[D_V0P]*TComplex::Conjugate(Qsd[D_TPC_ETAC]);
 		bc = Qsd[D_TPC_ETAA]*TComplex::Conjugate(Qsd[D_TPC_ETAC]);
-		pah[R_V0P][cid]->Fill(ab.Re());
-		pbh[R_V0P][cid]->Fill(ac.Re());
-		pch[R_V0P][cid]->Fill(bc.Re());
+		jhistos->pah[R_V0P][cid]->Fill(ab.Re());
+		jhistos->pbh[R_V0P][cid]->Fill(ac.Re());
+		jhistos->pch[R_V0P][cid]->Fill(bc.Re());
 
 	} // end of event loop
 	return 0;

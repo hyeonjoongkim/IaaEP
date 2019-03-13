@@ -2,12 +2,8 @@
 
 
 //______________________________________________________________________________
-JToyFlowHistos::JToyFlowHistos():
-	fUseDirectory(true)
+JToyFlowHistos::JToyFlowHistos()
 {   // constructor
-
-	
-	fTopDirectory = gDirectory;
 
 }
 

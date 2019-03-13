@@ -3,7 +3,7 @@
 //===========================================================
 
 #ifndef JTOYFLOWHISTOS_H
-#define JToyFLOWHISTOS_H
+#define JTOYFLOWHISTOS_H
 
 #include <iostream>
 #include <fstream>
@@ -23,13 +23,12 @@ class JToyFlowHistos {
 public:
   JToyFlowHistos(); 
   virtual ~JToyFlowHistos(){;}	  //destructor
-  
+  JToyFlowHistos(const JToyFlowHistos& obj);
+  JToyFlowHistos& operator=(const JToyFlowHistos& obj); 
   // ALICE methods =====================================================
   void CreateHistos();
 
 private:
-  char  hname[40], htit[40];
-  float b1, b2, pb1, pb2;
 
 public:
   //===================================================
