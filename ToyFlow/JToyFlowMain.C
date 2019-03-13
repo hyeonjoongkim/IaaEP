@@ -7,6 +7,7 @@
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TComplex.h>
+#include <TStopwatch.h>
 #include "JToyFlowHistos.h"
 #include "JToyFlowInputs.h"
 double CheckDetectorPhi(double phi);
@@ -16,9 +17,9 @@ typedef unsigned int uint;
 
 int main(int argc, char **pargv){
 	uint seed = argc > 1?atol(pargv[1]):1000;
-	uint evtc = argc > 2?atol(pargv[2]):1000;
-	printf("seed:\t%u\nevents:\t%u\n",seed,evtc);
-	TFile *pfo = new TFile(argc > 3?pargv[3]:"results.root","recreate");
+	uint Nevt = argc > 2?atol(pargv[2]):1000;
+	printf("seed:\t%u\nevents:\t%u\n",seed,Nevt);
+	TFile *fout = new TFile(argc > 3?pargv[3]:"results.root","recreate");
 
 	// Define PDF based on F.A
 	double pi = TMath::Pi();
@@ -38,8 +39,14 @@ int main(int argc, char **pargv){
 	// Need to get Multiplicity and vn based on the measured data.
 	// ALICE dN/deta vn
 	double vn[2];
+	int ieout = Nevt/20;
+    if (ieout<1) ieout=1;
+    int EventCounter = 0;
+	TStopwatch timer;
+    timer.Start();
     // Event Loop
-	for(uint evt = 0; evt < evtc; ++evt){
+	for(uint ievt = 0; ievt < Nevt; ++ievt){
+		if(ievt % ieout == 0) cout << ievt << "\t" << int(float(ievt)/Nevt*100) << "%" << endl ;
 		//Event generation ----------------------------
 		double cent = prng->Uniform(0,50.0);
 		vn[0]=  jflowinputs->GetVn(0,cent); 
@@ -110,8 +117,13 @@ int main(int argc, char **pargv){
 		jhistos->pbh[R_V0P][cid]->Fill(ac.Re());
 		jhistos->pch[R_V0P][cid]->Fill(bc.Re());
 
+		EventCounter++;
 	} // end of event loop
-	return 0;
+    fout->Write();
+    fout->Close();
+   
+    cout << EventCounter << " events are analyzed successfully."<< endl;
+    timer.Print();
 }
 
 double CheckDetectorPhi(double phi) {
