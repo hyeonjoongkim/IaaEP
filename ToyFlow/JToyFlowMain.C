@@ -76,6 +76,8 @@ int main(int argc, char **pargv){
 			TComplex Qa2 = TComplex(0,0);
 			for(uint i = 0; i < ntracks; ++i){
 				double tphi = pdf->GetRandom();
+				if (ievt<10&&s==0) jhistos->hPhiEbE[cid] -> Fill(tphi);
+
         		double phi = CheckDetectorPhi(tphi);
         		trackphi[s].push_back(phi);
 				Qa2 += TComplex(TMath::Cos(2.0*phi),TMath::Sin(2.0*phi));

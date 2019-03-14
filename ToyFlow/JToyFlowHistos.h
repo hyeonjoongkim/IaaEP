@@ -41,6 +41,7 @@ public:
   TH2D *evpcorr2d[R_COUNT][NC];
   TH2D *evpcorrvsdet2d[NC];
   TH1D *evpdifference[R_COUNT][NC];
+  TH1D *hPhiEbE[NC];
 
 };
 

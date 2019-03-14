@@ -1,5 +1,5 @@
 #include  "JToyFlowHistos.h"
-
+#include <TMath.h>
 
 //______________________________________________________________________________
 JToyFlowHistos::JToyFlowHistos()
@@ -21,8 +21,12 @@ JToyFlowHistos& JToyFlowHistos::operator=(const JToyFlowHistos& obj){
 //______________________________________________________________________________
 void JToyFlowHistos::CreateHistos()
 {
-	for(uint i = 0; i < R_COUNT; ++i){
-		for(uint j = 0; j < NC; ++j){
+
+for(uint j = 0; j < 10; ++j){
+        hPhiEbE[j] = new TH1D(Form("hPhiEbE_c%02u",j),Form("%.0f-%.0f", CentBins[j], CentBins[j+1]),1000,-TMath::Pi(),TMath::Pi());
+    }
+	for(uint j = 0; j < NC; ++j){
+        for(uint i = 0; i < R_COUNT; ++i){
 			pah[i][j] = new TH1D(Form("h_res_%s_a%02u",presn[i],j),"h_res",1024,-1.5,1.5);
 			pbh[i][j] = new TH1D(Form("h_res_%s_b%02u",presn[i],j),"h_res",1024,-1.5,1.5);
 			pch[i][j] = new TH1D(Form("h_res_%s_c%02u",presn[i],j),"h_res",1024,-1.5,1.5);
