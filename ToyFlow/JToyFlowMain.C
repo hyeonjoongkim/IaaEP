@@ -121,22 +121,26 @@ int main(int argc, char **pargv){
 
 		EventCounter++;
 	} // end of event loop
-    fout->Write();
-    fout->Close();
-   
-    cout << EventCounter << " events are analyzed successfully."<< endl;
-    timer.Print();
+	// OK let's save TGraph of input Nch and vn into the output file.
+	fout->cd();
+	for(int i=0;i<D_COUNT;i++) { jflowinputs->pgr_nch[i]->SetTitle(Form("nch integrated for %d",i)); jflowinputs->pgr_nch[i]->Write(Form("pgr_nch_%02d",i));}
+	for(int j=0;j<N_VN;j++) { jflowinputs->pgr_v[j]->SetTitle(Form("v_%d as a function of centrality",j+2));jflowinputs->pgr_v[j]->Write(Form("pgr_v_%02d",j));}	
+	fout->Write();
+	fout->Close();
+
+	cout << EventCounter << " events are analyzed successfully."<< endl;
+	timer.Print();
 }
 
 double CheckDetectorPhi(double phi) {
 
-  double pi = TMath::Pi();
-  double angle[8] = {-3*pi/4, -1*pi/2, -1*pi/4, 0, pi/4, pi/2, 3*pi/4, pi};
-  double medianangle[8] = {-7*pi/8, -5*pi/8, -3*pi/8, -1*pi/8, pi/8, 3*pi/8, 5*pi/8, 7*pi/8};
-  int i = 0;
-  for ( ; i < 8; i++) {
-    if (phi < angle[i]) break;
-  }
-  return medianangle[i];
+	double pi = TMath::Pi();
+	double angle[8] = {-3*pi/4, -1*pi/2, -1*pi/4, 0, pi/4, pi/2, 3*pi/4, pi};
+	double medianangle[8] = {-7*pi/8, -5*pi/8, -3*pi/8, -1*pi/8, pi/8, 3*pi/8, 5*pi/8, 7*pi/8};
+	int i = 0;
+	for ( ; i < 8; i++) {
+		if (phi < angle[i]) break;
+	}
+	return medianangle[i];
 }
 
