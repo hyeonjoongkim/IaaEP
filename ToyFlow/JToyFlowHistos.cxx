@@ -22,7 +22,7 @@ JToyFlowHistos& JToyFlowHistos::operator=(const JToyFlowHistos& obj){
 void JToyFlowHistos::CreateHistos()
 {
 
-for(uint j = 0; j < 10; ++j){
+for(uint j = 0; j < NC; ++j){
         hPhiEbE[j] = new TH1D(Form("hPhiEbE_c%02u",j),Form("%.0f-%.0f", CentBins[j], CentBins[j+1]),1000,-TMath::Pi(),TMath::Pi());
     }
 	for(uint j = 0; j < NC; ++j){
