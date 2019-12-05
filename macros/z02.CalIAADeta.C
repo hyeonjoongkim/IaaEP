@@ -30,10 +30,12 @@ TFile *fin;
 TH1D *hDeltaEta[2][kCENT][kMAXD][kMAXD]; // summed DeltaEta AA-0 pp-1
 TH1D *hDeltaEtaFlip[2][kCENT][kMAXD][kMAXD]; // Flip Deta around 0 to positive side
 TH1D *hDeltaEtaSig[2][kCENT][kMAXD][kMAXD]; // background substracted signal based on fit
+TH1D *hDeltaEtaFull[2][kCENT][kMAXD];
 // IAA before substraction and after
 TH1D *hIAADeltaEta[kCENT][kMAXD][kMAXD];
 TH1D *hIAADeltaEtaFlip[kCENT][kMAXD][kMAXD];
 TH1D *hIAADeltaEtaSig[kCENT][kMAXD][kMAXD]; // background substracted signal IAA
+TH1D *hIAADeltaEtaFull[kCENT][kMAXD];   // IAA vs. pTT, integrated// 
 
 // Fits only after Fip at this moment
 TF1 *fKaplan[2][kCENT][kMAXD][kMAXD]; // 
@@ -53,42 +55,27 @@ TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV";
 
 void run2() {
 
-	const int Nsets = 34;
+	const int Nsets = 12;
 	TString infiles[Nsets] = {
-		"sysErrors/_AMPT_LHC13f3a_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3a_JCIAA_V0C_E00_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3a_JCIAA_V0C_E90_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5175_JCIAA_TPCOnly_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root", // 31
-		"sysErrors/_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root", // 30
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC17l3b_cent_woSDD_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC17l3b_cent_woSDD_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC17l3b_fast_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC17l3b_fast_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root", // new data w.o correct filter bit
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_V0C_E00_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_V0C_E90_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC10h_AOD86_MgFpMgFm_5317_JCIAA_V0C_E90_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_QF1_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF1_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC15o_GlobalSDD_JCIAA_GlobalSDD_pythia8230_pp5.02TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC15o_TPCOnly_JCIAA_TPCOnly_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_TPC_E00_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_TPC_E90_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_V0A_E00_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_V0A_E90_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_V0P_E00_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_V0P_E90_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+"sysErrors/_AOD160_TPCOnly_NTM_JDiHadronIAA_TPCOnly_H0_T0_TM_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD160_TPCOnly_NTM_JDiHadronIAA_TPCOnly_H0_T0_TM_LHC11a_AOD113_noSDD_GlobalSDD_NTM_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD160_TPCOnly_NTM_JDiHadronIAA_TPCOnly_H0_T0_TM_LHC11a_AOD113_noSDD_RAA_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD160_TPConly_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD160_TPConly_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD160_TPConly_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_RAA_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD86_RAA_JDiHadronIAA_RAA_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD86_RAA_JDiHadronIAA_RAA_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD86_RAA_JDiHadronIAA_RAA_H0_T0_LHC11a_AOD113_noSDD_RAA_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD160_TPConly_phi15_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_phi15_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD160_TPConly_phi25_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_phi25_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD160_TPConly_vtx8_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+//"sysErrors/_AOD86_TPCOnly_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_wSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+//"sysErrors/_AOD86_TPCOnly_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+//	"sysErrors/_AOD160_TPCOnly_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+//	"sysErrors/_AOD160_RAA_JDiHadronIAA_RAA_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+//	"sysErrors/_AOD160_TPCOnly_NTM_JDiHadronIAA_TPCOnly_H0_T0_TM_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+//	"sysErrors/_AOD86_RAA_JDiHadronIAA_RAA_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+
 	};
 
 	TObjArray *outString[Nsets];
@@ -100,7 +87,7 @@ void run2() {
 		outrootname[i] = Form("%s/Signal%s",sDir.Data(),sName.Data());
 		//cout << outrootname[i] << endl;
 	}
-	for(int i=0;i<3;i++) { 
+	for(int i=9;i<12;i++) { 
 		DoAnalysis(infiles[i],outrootname[i]);
 	}
 //	DoAnalysis ("sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root","sysErrors/_Signal_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root");
@@ -122,12 +109,15 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	AssocPtBorders             = (TVector*) fin->Get("AssocPtBorders");
 	CentBinBorders             = (TVector*) fin->Get("CentBinBorders");
 
-	int NumCent[2]    = { CentBinBorders->GetNoElements()-2, 1}; 
+	int NumCent[2]    = { CentBinBorders->GetNoElements()-1, 1}; 
 	int NumPtt     = TriggPtBorders->GetNoElements()-1;
-	int NumPta     = AssocPtBorders->GetNoElements()-1;
+	int NumPta     = AssocPtBorders->GetNoElements()-2;
 	cout <<"PbPb"<<endl;
 	cout <<"bins:  c="<<  NumCent[AA] <<" ptt="<< NumPtt <<" pta="<< NumPta  << endl; 
 	cout <<"+++++++++++++++++++++++++++++++++++++++++++++++"<<endl;
+  float *fCentBinArr = CentBinBorders->GetMatrixArray();
+  float *fTriggPtArr = TriggPtBorders->GetMatrixArray();
+  float *fAssocPtArr = AssocPtBorders->GetMatrixArray();
 
 	NC = NumCent[AA];
 	int NPTT = NumPtt;
@@ -157,6 +147,7 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	// Fit functions
 	double fitRange = -1;
 	double MaxEta = 0.8;
+	cout << "Starting Fit ..." << endl;
 	for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp  //(*fCentralityBinBorders)[i+1]
 		for(int ic=0; ic<NumCent[idtyp]; ic++){
 			for(int iptt=0; iptt<NPTT; iptt++){
@@ -167,27 +158,79 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 					fKaplan[idtyp][ic][iptt][ipta] = new TF1(fitname, FitKaplan, 0, maxRange,4); 
 					// GG
 					fitname = Form("GG%02d%02d%02d%02d", idtyp, ic, iptt, ipta);
-					fGG[idtyp][ic][iptt][ipta]     = new TF1(fitname, FitGeneralizedGausPlusBG, -1.6, 1.6, 4); // 4 Parameters
+					fGG[idtyp][ic][iptt][ipta]     = new TF1(fitname, FitGeneralizedGausPlusBG, 0, 1.6, 4); // 4 Parameters
 
 					//estimate fit parametes
 					TH1D *hFlipDeta = (TH1D*) hDeltaEtaFlip[idtyp][ic][iptt][ipta];
+////					TH1D *hFlipDeta = (TH1D*) hDeltaEta[idtyp][ic][iptt][ipta];
+//					double bg       = hFlipDeta->Integral(hFlipDeta->FindBin(0.4), hFlipDeta->GetNbinsX())/(hFlipDeta->GetNbinsX()-hFlipDeta->FindBin(0.4));
+//					double peakAmpl = hFlipDeta->GetBinContent(hFlipDeta->FindBin(0))-bg;
+//					fKaplan[idtyp][ic][iptt][ipta]->SetParameters(bg, peakAmpl, 20.0, 1.0);
+//					//fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(0,bg/10.,bg*4.);
+//					//fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(1,2e-3,100);
+//					//fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(3,2e-3,10);
+//					TString opt = "QRN";
+//					hFlipDeta->Fit((TF1*) fKaplan[idtyp][ic][iptt][ipta],opt);
+//					bg         = fKaplan[idtyp][ic][iptt][ipta]->GetParameter(0);
+//					double ebg = fKaplan[idtyp][ic][iptt][ipta]->GetParError(0);
+//          			hDeltaEtaSig[idtyp][ic][iptt][ipta] = SubtractBg(hFlipDeta,bg,ebg); //subtract bg
+          
+                
+//                //Estimate Fit parameters for GG
 					double bg       = hFlipDeta->Integral(hFlipDeta->FindBin(0.4), hFlipDeta->GetNbinsX())/(hFlipDeta->GetNbinsX()-hFlipDeta->FindBin(0.4));
 					double peakAmpl = hFlipDeta->GetBinContent(hFlipDeta->FindBin(0))-bg;
-					fKaplan[idtyp][ic][iptt][ipta]->SetParameters(bg, peakAmpl, 20.0, 1.0);
-					//fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(0,bg/10.,bg*4.);
-					//fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(1,2e-3,100);
-					//fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(3,2e-3,10);
-					TString opt = "QRN";
-					hFlipDeta->Fit((TF1*) fKaplan[idtyp][ic][iptt][ipta],opt);
-					bg         = fKaplan[idtyp][ic][iptt][ipta]->GetParameter(0);
-					double ebg = fKaplan[idtyp][ic][iptt][ipta]->GetParError(0);
-          			hDeltaEtaSig[idtyp][ic][iptt][ipta] = SubtractBg(hFlipDeta,bg,ebg); //subtract bg
+          double beta = 1;
+          double alpha = TMath::Sqrt(hFlipDeta->GetRMS()*0.5);
+          fGG[idtyp][ic][iptt][ipta]->SetParameters(alpha, beta, 2*alpha*peakAmpl, bg);
+          fGG[idtyp][ic][iptt][ipta]->SetParLimits(1, 0.05, 2.2);
+//          fGG[idtyp][ic][iptt][ipta]->SetParLimits(0, 0.1, 1);
+//          fGG[idtyp][ic][iptt][ipta]->SetParLimits(3, 0, 1e10);
+
+          TString opt = "QS";
+          hFlipDeta->Fit( fGG[idtyp][ic][iptt][ipta], opt, "", 0, 1.5);
+		  //cout << "Fit 1 " << endl;
+          hFlipDeta->Fit( fGG[idtyp][ic][iptt][ipta], opt, "", 0, 1.5);
+//		  		  cout << "Fit 2 " << endl;
+
+          
+          bg = fGG[idtyp][ic][iptt][ipta]->GetParameter(3);
+          double ebg = fGG[idtyp][ic][iptt][ipta]->GetParError(3);
+          hDeltaEtaSig[idtyp][ic][iptt][ipta] = SubtractBg(hFlipDeta, bg, ebg);
 				} // ipta
 			} // iptt 
 		} // ic
 	} // pp or AA
 
 	cout <<"Calculationg IAA..."<<endl;
+
+  for (int idtyp = 0; idtyp < 2; ++idtyp) {
+    for(int ic=0; ic<NumCent[idtyp]; ic++){
+      for(int iptt=0; iptt<NPTT; iptt++){
+
+        hDeltaEtaFull[idtyp][ic][iptt] = new TH1D(Form("hDeltaEtaFull%02dC%02dT%02d", idtyp, ic, iptt), Form("IAA Cent %.0f-%.0f, Trig pT %.0f-%.0f", fCentBinArr[ic], fCentBinArr[ic+1], fTriggPtArr[iptt], fTriggPtArr[iptt+1]), NPTA, fAssocPtArr);
+
+        for (int ipta = 0; ipta < NPTA; ++ipta) {
+          int minbin = hDeltaEtaSig[idtyp][ic][iptt][ipta]->GetXaxis()->FindBin(0.);
+          int maxbin = hDeltaEtaSig[idtyp][ic][iptt][ipta]->GetXaxis()->FindBin(1.0);
+          double err; 
+          double yield = hDeltaEtaSig[idtyp][ic][iptt][ipta]->IntegralAndError(minbin, maxbin, err, "width");
+          hDeltaEtaFull[idtyp][ic][iptt]->Fill( (fAssocPtArr[ipta] + fAssocPtArr[ipta+1])/2, yield);
+          hDeltaEtaFull[idtyp][ic][iptt]->SetBinError(ipta+1, err);
+        } // ipta
+
+      } // iptt
+    } // ic
+  } // idtyp 
+  
+  cout << "Divide hDeltaEtaFull" << endl;
+  for (int ic = 0; ic < NumCent[AA]; ++ic) {
+    for (int iptt = 0; iptt < NPTT; ++iptt) {
+      hIAADeltaEtaFull[ic][iptt] = (TH1D*) hDeltaEtaFull[AA][ic][iptt]->Clone(Form("hIAADeltaEtaFull%02d%02d", ic, iptt));
+      hIAADeltaEtaFull[ic][iptt]->Divide(hDeltaEtaFull[pp][0][iptt]);
+    }
+  }
+
+  cout << "Divide hDeltaEtaFlip" << endl;
 
 	for(int ic=0; ic<NumCent[AA]; ic++){
 		for(int iptt=0; iptt<NPTT; iptt++){
@@ -207,11 +250,11 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 
 
 	int iPTT=3;
-	int iPTA=4;
+	int iPTA=5;
 
 	//DrawBeforeFlip(iPTT, iPTA);
-	DrawAfterFlip(iPTT, iPTA);
-	//DrawSignal(iPTT, iPTA);
+	//DrawAfterFlip(iPTT, iPTA);
+	DrawSignal(iPTT, iPTA);
 
 	if(saveRoot) {
 		cout <<"Writing the results into a file..."<< endl;
@@ -228,6 +271,16 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 				} // ptt 
 			} // cent
 		} // type 
+
+		for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
+			for(int ic=0; ic<NumCent[idtyp]; ic++){
+				for(int iptt=0; iptt<NPTT; iptt++){
+          hDeltaEtaFull[idtyp][ic][iptt]->Write(Form("hDeltaEtaFull%02dC%02dT%02d", idtyp, ic, iptt));
+          if (idtyp == AA) hIAADeltaEtaFull[ic][iptt]->Write(Form("hIAADeltaEtaFullC%02dT%02d", ic, iptt));
+
+        }
+      }
+    }
 		fout->cd();
 		CentBinBorders->Write("CentBinBorders");
 		TriggPtBorders->Write("TriggPtBorders");
@@ -370,7 +423,7 @@ void DrawBeforeFlip(int iPTT, int iPTA) {
 //------------------------------------------------------------------------------------------------
 TH1D *Flip(TH1D* hin, int idtyp){
 	int nb  = hin->GetNbinsX();
-	double scale = 2.0; // MUST Have dN/deta -> dN/d|eta|
+	double scale = 1.0; // MUST Have dN/deta -> dN/d|eta|
 	double max = hin->GetBinLowEdge(nb+1);
 	TString hname = hin->GetName();
 	TString newName = Form("%s_flip%d",hname.Data(),idtyp);

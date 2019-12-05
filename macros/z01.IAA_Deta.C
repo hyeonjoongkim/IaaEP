@@ -18,6 +18,7 @@ const int kMAXD       = 20; //maximal number of pT trigger bins
 const int kCENT       = 10; //maximal number of pT trigger bins
 const int kZvtx       = 15; //maximal number of pT trigger bins
 double fmaxEtaRange = 0.8;
+float vtxcut = 8;
 
 
 TH1D *hTriggPtBin[2][kCENT][kMAXD]; 
@@ -43,30 +44,58 @@ Bool_t saveDeta = kTRUE;
 Bool_t mcTrue = kTRUE; //  RestoreTriangle
 
 void run1Data(){
-	const int NAA = 2;
+	const int NAA = 3;
 	TString fileAA[NAA] = {
-		"legotrain_JCIaa/data/JCIaa_legotrain_TPCOnly_CF_PbPb-5217_20180416-1933_runlist_3-LHC10h_AOD86_MgFpMgFm.root",
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb-5317_20180427-1405_runlist_3-LHC10h_AOD86_MgFpMgFm.root"
+//		"legotrain_JCIaa/data/JCIaa_legotrain_TPCOnly_CF_PbPb-5217_20180416-1933_runlist_3-LHC10h_AOD86_MgFpMgFm.root",
+//		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb-5317_20180427-1405_runlist_3-LHC10h_AOD86_MgFpMgFm.root"
+ //"legotrain_JCIaa/data/JIAA_legotrain_TPCOnly_CF_PbPb-5707_20180827-1703-runlist_3-LHC10h_AOD160.root",
+ "legotrain_JCIaa/data/7481_PbPb_TPCOnly_T1.root",
+ "legotrain_JCIaa/data/4648_AOD86_RAA.root",
+// "legotrain_JCIaa/data/7362_PbPb_RAA_TM1.root",
+ //"legotrain_JCIaa/data/7425_PbPb_RAA_T1.root",
+ "legotrain_JCIaa/data/7445_PbPb_TPCOnly_TM0.root"
 	};
 	TString dirAA[NAA] = {
-		"JCIAA_TPCOnly_H0_T0",
-		"JCIAA_V0C_E90"
+		"JDiHadronIAA_TPCOnly_H0_T0",
+		//"JDiHadronIAA_TPCOnly_H0_T0",
+		"JDiHadronIAA_RAA_H0_T0",
+		"JDiHadronIAA_TPCOnly_H0_T0_TM"
+	//	"JCIAA_V0C_E90"
 	};
 	TString commentAA[NAA] = {
-		"LHC10h_AOD86_MgFpMgFm_5217",
-		"LHC10h_AOD86_MgFpMgFm_5317"
+//		"AOD86_TPCOnly",
+//		"AOD160_RAA",
+		"AOD160_TPConly_vtx8",
+		"AOD86_RAA",
+//		"AOD160_RAA",
+		"AOD160_TPCOnly_NTM"
+		//"LHC10h_AOD86_MgFpMgFm_5317"
+//		"AOD86_RAA"
 	};
 
-	const int NPP = 1;
+	const int NPP = 3;
 	TString dirPP[NPP] = {
-		"JCIAA_GlobalSDD_H0_T0"
+		"JDiHadronIAA_GlobalSDD_H0_T0_TrackMerge",
+		"JDiHadronIAA_GlobalSDD_H0_T0",
+		"JDiHadronIAA_RAA_H0_T0_TrackMerge",
+//		"JDiHadronIAA_GlobalSDD_H0_T0"
 	};
 
 	TString filePP[NPP] = {
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1708_20180405-0222-2760GeV_LHC11a_p4_AOD113_noSDD.root"
+//		"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1708_20180405-0222-2760GeV_LHC11a_p4_AOD113_noSDD.root"
+//"legotrain_JCIaa/data/JIAA_legotrain_CF_pp-2234_20180915-0940-2760GeV_LHC11a_p4_AOD113_noSDD.root"
+//"legotrain_JCIaa/data/JIAA_legotrain_CF_pp-2064_20180815-2018-2760GeV_LHC11a_p4_AOD113_noSDD.root"
+//"legotrain_JCIaa/data/JIAA_legotrain_CF_pp-2235_20180915-0940-2760GeV_LHC11a_p4_AOD113_withSDD.root"
+"legotrain_JCIaa/data/JCIaa_pp_3252_noSDD.root",
+"legotrain_JCIaa/data/JCIaa_pp_3252_noSDD.root",
+"legotrain_JCIaa/data/JCIaa_pp_3252_noSDD.root",
 	};
 	TString commentPP[NPP] = {
-		"LHC11a_p4_AOD113_noSDD"
+//		"LHC11a_p4_AOD113_wSDD",
+"LHC11a_AOD113_noSDD_GlobalSDD",
+"LHC11a_AOD113_noSDD_GlobalSDD_NTM",
+"LHC11a_AOD113_noSDD_RAA",
+
 	};
 
 	// Moon
@@ -74,8 +103,8 @@ void run1Data(){
 	double dR[NR] = {0.2};
 	double BgRbegin[1] = {1.0};
 	int NBG=1;
-	for(int iA=0;iA<NAA;iA++) { // NAA
-		for(int iP=0;iP<NPP;iP++) {
+	for(int iA=0;iA<1;iA++) { // NAA
+		for(int iP=0;iP<1;iP++) {
 			for(int iR=0;iR<NR;iR++){
 				for( int iB=0;iB<NBG;iB++){
 					DoAnalysis( dR[iR], BgRbegin[iB], 1.6, 1, 0, fileAA[iA],filePP[iP],dirAA[iA],dirPP[iP],commentAA[iA]+"_"+dirAA[iA]+"_"+commentPP[iP] );
@@ -218,7 +247,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	int doMixMerge = 1;
 	int takeMixExt = 0;
 	int correctMix = 1;
-	double mixptt = 4.0, mixpta = 3.0;
+	double mixptt = 6.0, mixpta = 4.0;
 	// this is just a cross check
 
 	enum fillType { kReal, kMixed, kSignal };
@@ -254,8 +283,22 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	}
 	// Temporary
 	int nzvtx[2] = { zVertBins[AA]->GetNoElements()-1, zVertBins[pp]->GetNoElements()-1}; 
-
-
+	float *zvertexbins = zVertBins[AA]->GetMatrixArray();
+	int nzvtxcut[2][2]; // idtyp, zbin
+	nzvtxcut[pp][0] = 0;
+	nzvtxcut[pp][1] = zVertBins[pp]->GetNoElements()-1;
+	for (int ibin = 0; ibin < zVertBins[AA]->GetNoElements(); ++ibin) {
+		//cout << ibin << " " << abs( abs(zvertexbins[ibin]) - vtxcut) << endl;
+		if ( abs( abs(zvertexbins[ibin]) - vtxcut) < 0.001) {
+			if (ibin < (zVertBins[AA]->GetNoElements() )/2 ) {
+				nzvtxcut[AA][0] = ibin;
+			} else {
+				nzvtxcut[AA][1] = ibin;
+			}
+		}
+	}
+	//cout << "zVertBins[AA]->GetNoElements()-1" << zVertBins[AA]->GetNoElements()-1 << endl;
+	cout << "ibin : " << nzvtxcut[0][0] << " " << nzvtxcut[0][1] << "pp : " << nzvtxcut[pp][0] << " " << nzvtxcut[pp][1]<< endl;
 	cout <<"++++++++++++++++  Settings +++++++++++++++++++++++++++++++++++++++++++++++++++++++++"<<endl;
 	cout <<"R_signal <  "<< sgnEta <<", "<< bgnEta[0] <<"<R_bck<"<< bgnEta[1] << endl;
 	cout <<"Wing Correction = "<< applyWingCorrection << endl;
@@ -296,7 +339,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	cout <<"pp"<<endl;
 	cout <<"bins:  "<<" eta="<< NumEtaGaps <<" zvtx="<<nzvtx[pp]<< endl; 
 
-	int NumCent[2]    = { CentBinBorders[AA]->GetNoElements()-2, 1};  // 5TEV data less cent 1
+	int NumCent[2]    = { CentBinBorders[AA]->GetNoElements()-1, 1};  // 5TEV data less cent 1
 	NumEtaGaps = EtaGapThresholds[AA]->GetNoElements()-1; 
 	int NumPtt     = TriggPtBorders[AA]->GetNoElements()-1;
 	int NumPta     = AssocPtBorders[AA]->GetNoElements()-1;
@@ -361,8 +404,9 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 					for(int ityp=0; ityp<2; ityp++){
 						if(idtyp==AA) {
 							for(int iz=0; iz<nzvtx[idtyp]; iz++){
-								//cout << Form("%s/hDphiDetaPta/hDphiDetaPtaD%02dC%02dV%02dT%02dA%02d",TopDir[idtyp].Data(), ityp, ic, iz, iptt, ipta) << endl;
+//								cout << Form("%s/hDphiDetaPta/hDphiDetaPtaD%02dC%02dV%02dT%02dA%02d",TopDir[idtyp].Data(), ityp, ic, iz, iptt, ipta) << endl;
 								hDphiAssoc2DIAAVtxAA[ityp][iz][ic][iptt][ipta] = (TH2D *)fin[idtyp]->Get(Form("%s/AliJHistos/hDphiDetaPta/hDphiDetaPtaD%02dC%02dV%02dT%02dA%02d",TopDir[idtyp].Data(), ityp, ic, iz, iptt, ipta));
+	//							if (!hDphiAssoc2DIAAVtxAA[ityp][iz][ic][iptt][ipta]) continue;
 								hDphiAssoc2DIAAVtxAA[ityp][iz][ic][iptt][ipta]->SetXTitle("#Delta#eta");
 								hDphiAssoc2DIAAVtxAA[ityp][iz][ic][iptt][ipta]->GetXaxis()->CenterTitle(kTRUE);
 								hDphiAssoc2DIAAVtxAA[ityp][iz][ic][iptt][ipta]->GetXaxis()->SetTitleOffset(2);
@@ -401,8 +445,8 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	int imixptt = 0;
 	if(doMixMerge) {
 		cout <<"Merging event mixing bin...."<<endl;
-		int imixpta = 0;
-		int imixptt = 0;
+		imixpta = 0;
+		imixptt = 0;
 		for(int iptt=0; iptt<NumPtt; iptt++){
 			if((*TriggPtBorders[AA])[iptt+1]>=mixptt ) { imixptt=iptt;break; }
 		}
@@ -413,18 +457,43 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 		cout << " merge after iptt="<< imixptt<<"\t ipta="<< imixpta << endl; 
 		for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
 			for(int ic=0; ic<NumCent[idtyp]; ic++){
-				for(int iz=0; iz<nzvtx[idtyp]; iz++){
+				for(int iz=nzvtxcut[idtyp][0]; iz<nzvtxcut[idtyp][1]; iz++){
 					if(idtyp==AA) {
-						for(int iiptt=imixptt+1; iiptt<NumPtt; iiptt++) {
+						for(int iiptt=imixptt; iiptt<NumPtt; iiptt++) {
 							for(int iipta=imixpta+1;iipta<NumPta;iipta++) {	
+								//if (!hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iiptt][iipta]) continue;
+
 								hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][imixptt][imixpta]->Add(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iiptt][iipta]);
 							}
 						}
 					} //AA 
 					if(idtyp==pp) {
-						for(int iiptt=imixptt+1; iiptt<NumPtt; iiptt++) {
+						for(int iiptt=imixptt; iiptt<NumPtt; iiptt++) {
 							for(int iipta=imixpta+1;iipta<NumPta;iipta++) {	
 								hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][imixptt][imixpta]->Add(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iiptt][iipta]);
+							}
+						}
+					} // pp 
+				} 
+			} 
+		} 
+		
+		for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
+			for(int ic=0; ic<NumCent[idtyp]; ic++){
+				for(int iz=nzvtxcut[idtyp][0]; iz<nzvtxcut[idtyp][1]; iz++){
+					if(idtyp==AA) {
+						for(int iiptt=imixptt; iiptt<NumPtt; iiptt++) {
+							for(int iipta=imixpta+1;iipta<NumPta;iipta++) {	
+//								if (!hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iiptt][iipta]) continue;
+
+								hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iiptt][iipta] = (TH2D*)hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][imixptt][imixpta]->Clone();
+							}
+						}
+					} //AA 
+					if(idtyp==pp) {
+						for(int iiptt=imixptt; iiptt<NumPtt; iiptt++) {
+							for(int iipta=imixpta+1;iipta<NumPta;iipta++) {	
+								hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iiptt][iipta] = (TH2D*)hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][imixptt][imixpta]->Clone();
 							}
 						}
 					} // pp 
@@ -443,7 +512,8 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 				for(int ipta=0;ipta<NumPta;ipta++) {
 					if(idtyp==AA) {
 						double nmixed = 0.;
-						for(int iz=0; iz<nzvtx[idtyp]; iz++){
+						for(int iz=nzvtxcut[idtyp][0]; iz<nzvtxcut[idtyp][1]; iz++){
+	//						if (!hDphiAssoc2DIAAVtxAA[kReal][iz][ic][iptt][ipta]) continue;
 							hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAAVtxAA[kReal][iz][ic][iptt][ipta]->Clone();
 							double norm  = hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Integral(); // should be before binwidth co
 							nmixed+= norm;
@@ -494,12 +564,13 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	for(int idtyp=0; idtyp<1; idtyp++){ // 0 = AA, 1 = pp
 		for(int ic=0; ic<NumCent[idtyp]; ic++){
 			for(int iptt=0; iptt<NumPtt; iptt++){
-				hTriggPtBin[idtyp][ic][iptt] = (TH1D*)hTriggPtBinVtx[idtyp][ic][0][iptt]->Clone();
-				for(int iz=1; iz<nzvtx[idtyp]; iz++) hTriggPtBin[idtyp][ic][iptt]->Add(hTriggPtBinVtx[idtyp][ic][iz][iptt]);
+				hTriggPtBin[idtyp][ic][iptt] = (TH1D*)hTriggPtBinVtx[idtyp][ic][nzvtxcut[idtyp][0]][iptt]->Clone();
+				for(int iz=nzvtxcut[idtyp][0]+1; iz<nzvtxcut[idtyp][1]; iz++) hTriggPtBin[idtyp][ic][iptt]->Add(hTriggPtBinVtx[idtyp][ic][iz][iptt]);
 					for(int ipta=0;ipta<NumPta;ipta++) {
 						if(idtyp==AA) {
-							hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAAVtxAA[kSignal][0][ic][iptt][ipta]->Clone();
-							for(int iz=1; iz<nzvtx[idtyp]; iz++){
+							hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAAVtxAA[kSignal][nzvtxcut[idtyp][0]][ic][iptt][ipta]->Clone();
+							for(int iz=nzvtxcut[idtyp][0]; iz<nzvtxcut[idtyp][1]; iz++){
+		//						if (!hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta]) continue;
 								hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Add(hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta]);
 							}
 							double ntriggall = hTriggPtBin[idtyp][ic][iptt]->Integral();
