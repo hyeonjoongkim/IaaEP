@@ -18,7 +18,7 @@ const int kMAXD       = 20; //maximal number of pT trigger bins
 const int kCENT       = 10; //maximal number of pT trigger bins
 const int kZvtx       = 15; //maximal number of pT trigger bins
 double fmaxEtaRange = 0.8;
-float vtxcut = 8;
+float vtxcut = 10;
 
 
 TH1D *hTriggPtBin[2][kCENT][kMAXD]; 
@@ -44,9 +44,9 @@ Bool_t saveDeta = kTRUE;
 Bool_t mcTrue = kTRUE; //  RestoreTriangle
 
 void run1Data(){
-	const int NAA = 3;
+	const int NAA = 4;
 	TString fileAA[NAA] = {
-//		"legotrain_JCIaa/data/JCIaa_legotrain_TPCOnly_CF_PbPb-5217_20180416-1933_runlist_3-LHC10h_AOD86_MgFpMgFm.root",
+		"legotrain_JCIaa/data/JCIaa_legotrain_TPCOnly_CF_PbPb-5217_20180416-1933_runlist_3-LHC10h_AOD86_MgFpMgFm.root",
 //		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb-5317_20180427-1405_runlist_3-LHC10h_AOD86_MgFpMgFm.root"
  //"legotrain_JCIaa/data/JIAA_legotrain_TPCOnly_CF_PbPb-5707_20180827-1703-runlist_3-LHC10h_AOD160.root",
  "legotrain_JCIaa/data/7481_PbPb_TPCOnly_T1.root",
@@ -56,16 +56,18 @@ void run1Data(){
  "legotrain_JCIaa/data/7445_PbPb_TPCOnly_TM0.root"
 	};
 	TString dirAA[NAA] = {
+		"JCIAA_TPCOnly_H0_T0",
 		"JDiHadronIAA_TPCOnly_H0_T0",
+
 		//"JDiHadronIAA_TPCOnly_H0_T0",
 		"JDiHadronIAA_RAA_H0_T0",
 		"JDiHadronIAA_TPCOnly_H0_T0_TM"
 	//	"JCIAA_V0C_E90"
 	};
 	TString commentAA[NAA] = {
-//		"AOD86_TPCOnly",
+		"AOD86_TPCOnly",
 //		"AOD160_RAA",
-		"AOD160_TPConly_vtx8",
+		"AOD160_TPConly",
 		"AOD86_RAA",
 //		"AOD160_RAA",
 		"AOD160_TPCOnly_NTM"
@@ -73,8 +75,9 @@ void run1Data(){
 //		"AOD86_RAA"
 	};
 
-	const int NPP = 3;
+	const int NPP = 4;
 	TString dirPP[NPP] = {
+		"JDiHadronIAA_GlobalSDD_H0_T0_TrackMerge",
 		"JDiHadronIAA_GlobalSDD_H0_T0_TrackMerge",
 		"JDiHadronIAA_GlobalSDD_H0_T0",
 		"JDiHadronIAA_RAA_H0_T0_TrackMerge",
@@ -83,7 +86,7 @@ void run1Data(){
 
 	TString filePP[NPP] = {
 //		"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1708_20180405-0222-2760GeV_LHC11a_p4_AOD113_noSDD.root"
-//"legotrain_JCIaa/data/JIAA_legotrain_CF_pp-2234_20180915-0940-2760GeV_LHC11a_p4_AOD113_noSDD.root"
+"legotrain_JCIaa/data/JIAA_legotrain_CF_pp-2234_20180915-0940-2760GeV_LHC11a_p4_AOD113_noSDD.root",
 //"legotrain_JCIaa/data/JIAA_legotrain_CF_pp-2064_20180815-2018-2760GeV_LHC11a_p4_AOD113_noSDD.root"
 //"legotrain_JCIaa/data/JIAA_legotrain_CF_pp-2235_20180915-0940-2760GeV_LHC11a_p4_AOD113_withSDD.root"
 "legotrain_JCIaa/data/JCIaa_pp_3252_noSDD.root",
@@ -91,7 +94,7 @@ void run1Data(){
 "legotrain_JCIaa/data/JCIaa_pp_3252_noSDD.root",
 	};
 	TString commentPP[NPP] = {
-//		"LHC11a_p4_AOD113_wSDD",
+		"JDiHadronIAA_GlobalSDD_H0_T0_TrackMerge",
 "LHC11a_AOD113_noSDD_GlobalSDD",
 "LHC11a_AOD113_noSDD_GlobalSDD_NTM",
 "LHC11a_AOD113_noSDD_RAA",
@@ -103,7 +106,7 @@ void run1Data(){
 	double dR[NR] = {0.2};
 	double BgRbegin[1] = {1.0};
 	int NBG=1;
-	for(int iA=0;iA<1;iA++) { // NAA
+	for(int iA=0;iA<3;iA++) { // NAA
 		for(int iP=0;iP<1;iP++) {
 			for(int iR=0;iR<NR;iR++){
 				for( int iB=0;iB<NBG;iB++){
@@ -460,16 +463,17 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 				for(int iz=nzvtxcut[idtyp][0]; iz<nzvtxcut[idtyp][1]; iz++){
 					if(idtyp==AA) {
 						for(int iiptt=imixptt; iiptt<NumPtt; iiptt++) {
-							for(int iipta=imixpta+1;iipta<NumPta;iipta++) {	
+							for(int iipta=imixpta;iipta<NumPta;iipta++) {	
+								if (iiptt == imixptt && iipta == imixpta) continue;
 								//if (!hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iiptt][iipta]) continue;
-
 								hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][imixptt][imixpta]->Add(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iiptt][iipta]);
 							}
 						}
 					} //AA 
 					if(idtyp==pp) {
 						for(int iiptt=imixptt; iiptt<NumPtt; iiptt++) {
-							for(int iipta=imixpta+1;iipta<NumPta;iipta++) {	
+							for(int iipta=imixpta;iipta<NumPta;iipta++) {	
+								if (iiptt == imixptt && iipta == imixpta) continue;
 								hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][imixptt][imixpta]->Add(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iiptt][iipta]);
 							}
 						}
@@ -483,7 +487,8 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 				for(int iz=nzvtxcut[idtyp][0]; iz<nzvtxcut[idtyp][1]; iz++){
 					if(idtyp==AA) {
 						for(int iiptt=imixptt; iiptt<NumPtt; iiptt++) {
-							for(int iipta=imixpta+1;iipta<NumPta;iipta++) {	
+							for(int iipta=imixpta;iipta<NumPta;iipta++) {	
+								if (iiptt == imixptt && iipta == imixpta) continue;
 //								if (!hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iiptt][iipta]) continue;
 
 								hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iiptt][iipta] = (TH2D*)hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][imixptt][imixpta]->Clone();
@@ -492,7 +497,8 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 					} //AA 
 					if(idtyp==pp) {
 						for(int iiptt=imixptt; iiptt<NumPtt; iiptt++) {
-							for(int iipta=imixpta+1;iipta<NumPta;iipta++) {	
+							for(int iipta=imixpta;iipta<NumPta;iipta++) {	
+								if (iiptt == imixptt && iipta == imixpta) continue;
 								hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iiptt][iipta] = (TH2D*)hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][imixptt][imixpta]->Clone();
 							}
 						}
@@ -790,7 +796,7 @@ double NormalizationFactor(TH2D *MixedHisto) {
 	int nbins = 0;
 
 	for (int iybin = 2; iybin < ybinmax; iybin++) {
-		//if (iybin > MixedHisto->GetYaxis()->FindBin(-0.2) && iybin < MixedHisto->GetYaxis()->FindBin(0.2)) continue;
+		if (iybin > MixedHisto->GetYaxis()->FindBin(-0.2) && iybin < MixedHisto->GetYaxis()->FindBin(0.2)) continue;
 		content += MixedHisto->GetBinContent(xbin, iybin);
 		nbins++;
 	}
