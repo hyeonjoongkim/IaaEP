@@ -18,7 +18,8 @@ const int kMAXD       = 20; //maximal number of pT trigger bins
 const int kCENT       = 10; //maximal number of pT trigger bins
 const int kZvtx       = 15; //maximal number of pT trigger bins
 double fmaxEtaRange = 0.8;
-float vtxcut = 10;
+float vtxcut = 8;
+float phicut = 0.2;
 
 
 TH1D *hTriggPtBin[2][kCENT][kMAXD]; 
@@ -47,58 +48,63 @@ void run1Data(){
 	const int NAA = 4;
 	TString fileAA[NAA] = {
 		"legotrain_JCIaa/data/JCIaa_legotrain_TPCOnly_CF_PbPb-5217_20180416-1933_runlist_3-LHC10h_AOD86_MgFpMgFm.root",
+//"legotrain_JCIaa/data/JCIaa_legotrain_PbPb_CF-5059_20180329-1139_runlist_3-LHC10h_AOD86_MgFpMgFm.root",
 //		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb-5317_20180427-1405_runlist_3-LHC10h_AOD86_MgFpMgFm.root"
  //"legotrain_JCIaa/data/JIAA_legotrain_TPCOnly_CF_PbPb-5707_20180827-1703-runlist_3-LHC10h_AOD160.root",
- "legotrain_JCIaa/data/7481_PbPb_TPCOnly_T1.root",
- "legotrain_JCIaa/data/4648_AOD86_RAA.root",
+ //"legotrain_JCIaa/data/7481_PbPb_TPCOnly_T1.root",
 // "legotrain_JCIaa/data/7362_PbPb_RAA_TM1.root",
  //"legotrain_JCIaa/data/7425_PbPb_RAA_T1.root",
- "legotrain_JCIaa/data/7445_PbPb_TPCOnly_TM0.root"
+// "legotrain_JCIaa/data/7445_PbPb_TPCOnly_TM0.root",
+  "legotrain_JCIaa/data/4648_AOD86_RAA.root",
+
 	};
 	TString dirAA[NAA] = {
-		"JCIAA_TPCOnly_H0_T0",
-		"JDiHadronIAA_TPCOnly_H0_T0",
-
+		"JCIAA_TPCOnly_H0_T0", // NTM
+//"JCIAA_TPCOnly_H0_T0",
+//		"JDiHadronIAA_TPCOnly_H0_T0",
 		//"JDiHadronIAA_TPCOnly_H0_T0",
-		"JDiHadronIAA_RAA_H0_T0",
-		"JDiHadronIAA_TPCOnly_H0_T0_TM"
+//		"JDiHadronIAA_TPCOnly_H0_T0_TM",
+		"JDiHadronIAA_RAA_H0_T0", // NTM
+
 	//	"JCIAA_V0C_E90"
 	};
 	TString commentAA[NAA] = {
-		"AOD86_TPCOnly",
+		"AOD86_TPCOnly_NTM_zvtx8",
+//		"AOD160_TPCOnly_5059",
 //		"AOD160_RAA",
-		"AOD160_TPConly",
-		"AOD86_RAA",
+//		"AOD160_TPConly",
 //		"AOD160_RAA",
-		"AOD160_TPCOnly_NTM"
+//		"AOD160_TPCOnly_NTM",
+		"AOD86_RAA_NTM",
+
 		//"LHC10h_AOD86_MgFpMgFm_5317"
 //		"AOD86_RAA"
 	};
 
-	const int NPP = 4;
+	const int NPP = 3;
 	TString dirPP[NPP] = {
-		"JDiHadronIAA_GlobalSDD_H0_T0_TrackMerge",
-		"JDiHadronIAA_GlobalSDD_H0_T0_TrackMerge",
+//		"JDiHadronIAA_GlobalSDD_H0_T0_TrackMerge",
 		"JDiHadronIAA_GlobalSDD_H0_T0",
-		"JDiHadronIAA_RAA_H0_T0_TrackMerge",
+		"JDiHadronIAA_GlobalSDD_H0_T0_TrackMerge",
+		"JDiHadronIAA_TPCOnly_H0_T0",
 //		"JDiHadronIAA_GlobalSDD_H0_T0"
 	};
 
 	TString filePP[NPP] = {
 //		"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1708_20180405-0222-2760GeV_LHC11a_p4_AOD113_noSDD.root"
+"legotrain_JCIaa/data/JIAA_legotrain_CF_pp-2064_20180815-2018-2760GeV_LHC11a_p4_AOD113_noSDD.root",
 "legotrain_JCIaa/data/JIAA_legotrain_CF_pp-2234_20180915-0940-2760GeV_LHC11a_p4_AOD113_noSDD.root",
-//"legotrain_JCIaa/data/JIAA_legotrain_CF_pp-2064_20180815-2018-2760GeV_LHC11a_p4_AOD113_noSDD.root"
+"legotrain_JCIaa/data/JIAA_legotrain_CF_pp-2064_20180815-2018-2760GeV_LHC11a_p4_AOD113_noSDD.root",
 //"legotrain_JCIaa/data/JIAA_legotrain_CF_pp-2235_20180915-0940-2760GeV_LHC11a_p4_AOD113_withSDD.root"
-"legotrain_JCIaa/data/JCIaa_pp_3252_noSDD.root",
-"legotrain_JCIaa/data/JCIaa_pp_3252_noSDD.root",
-"legotrain_JCIaa/data/JCIaa_pp_3252_noSDD.root",
+//"legotrain_JCIaa/data/JCIaa_pp_3252_noSDD.root",
+//"legotrain_JCIaa/data/JCIaa_pp_3252_noSDD.root",
+//"legotrain_JCIaa/data/JCIaa_pp_3252_noSDD.root",
 	};
 	TString commentPP[NPP] = {
-		"JDiHadronIAA_GlobalSDD_H0_T0_TrackMerge",
+		//"JDiHadronIAA_GlobalSDD_H0_T0_TrackMerge",
+"LHC11a_AOD113_noSDD_GlobalSDD_NTM_zvtx8",
 "LHC11a_AOD113_noSDD_GlobalSDD",
-"LHC11a_AOD113_noSDD_GlobalSDD_NTM",
-"LHC11a_AOD113_noSDD_RAA",
-
+"LHC11a_AOD113_noSDD_TPC_NTM",
 	};
 
 	// Moon
@@ -106,7 +112,7 @@ void run1Data(){
 	double dR[NR] = {0.2};
 	double BgRbegin[1] = {1.0};
 	int NBG=1;
-	for(int iA=0;iA<3;iA++) { // NAA
+	for(int iA=0;iA<1;iA++) { // NAA
 		for(int iP=0;iP<1;iP++) {
 			for(int iR=0;iR<NR;iR++){
 				for( int iB=0;iB<NBG;iB++){
@@ -682,8 +688,8 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 			for(int iptt=0; iptt<NumPtt; iptt++){
 				ntrigg = hTriggPtBin[idtyp][ic][iptt]->Integral();
 				for(int ipta=0;ipta<NumPta;ipta++) {
-					int phil = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(-0.2*TMath::Pi()); // Y axis : phi... 
-					int phih = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(+0.2*TMath::Pi());
+					int phil = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(-1.0*phicut); // Y axis : phi... 
+					int phih = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(phicut);
 					//HJ's finding... because of phi projection
 					double phiBinWidth = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->GetBinWidth(1);
 					// Signal x:eta y:phi

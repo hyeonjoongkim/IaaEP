@@ -18,6 +18,8 @@ const int kCENT       = 10; //maximal number of pT trigger bins
 const int kZvtx       = 15; //maximal number of pT trigger bins
 enum dataType { AA, pp };
 int NC;
+int fitgaus = 1;
+float cutFitRange = 1.5;
 
 TH1D *hTriggPtBin[2][kCENT][kMAXD]; 
 TH1D *hAssocPtBin[2][kCENT][kMAXD][kMAXD]; 
@@ -40,6 +42,7 @@ TH1D *hIAADeltaEtaFull[kCENT][kMAXD];   // IAA vs. pTT, integrated//
 // Fits only after Fip at this moment
 TF1 *fKaplan[2][kCENT][kMAXD][kMAXD]; // 
 TF1 *fGG[2][kCENT][kMAXD][kMAXD]; //
+TF1 *fGaus[2][kCENT][kMAXD][kMAXD]; //
 
 Bool_t saveRoot = kTRUE;
 double lowx=-0.8;
@@ -55,28 +58,14 @@ TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV";
 
 void run2() {
 
-	const int Nsets = 14;
+	const int Nsets = 6;
 	TString infiles[Nsets] = {
-"sysErrors/_AOD160_TPCOnly_NTM_JDiHadronIAA_TPCOnly_H0_T0_TM_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-"sysErrors/_AOD160_TPCOnly_NTM_JDiHadronIAA_TPCOnly_H0_T0_TM_LHC11a_AOD113_noSDD_GlobalSDD_NTM_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-"sysErrors/_AOD160_TPCOnly_NTM_JDiHadronIAA_TPCOnly_H0_T0_TM_LHC11a_AOD113_noSDD_RAA_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-"sysErrors/_AOD160_TPConly_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-"sysErrors/_AOD160_TPConly_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-"sysErrors/_AOD160_TPConly_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_RAA_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-"sysErrors/_AOD86_RAA_JDiHadronIAA_RAA_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-"sysErrors/_AOD86_RAA_JDiHadronIAA_RAA_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-"sysErrors/_AOD86_RAA_JDiHadronIAA_RAA_H0_T0_LHC11a_AOD113_noSDD_RAA_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-"sysErrors/_AOD160_TPConly_phi15_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_phi15_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-"sysErrors/_AOD160_TPConly_phi25_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_phi25_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-"sysErrors/_AOD160_TPConly_vtx8_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-//"sysErrors/_AOD86_TPCOnly_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_wSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-"sysErrors/_AOD86_TPCOnly_JCIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-"sysErrors/_AOD160_TPConly_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
-//	"sysErrors/_AOD160_TPCOnly_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-//	"sysErrors/_AOD160_RAA_JDiHadronIAA_RAA_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-//	"sysErrors/_AOD160_TPCOnly_NTM_JDiHadronIAA_TPCOnly_H0_T0_TM_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-//	"sysErrors/_AOD86_RAA_JDiHadronIAA_RAA_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-
+"sysErrors/_AOD86_TPCOnly_NTM_JCIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD86_RAA_NTM_JDiHadronIAA_RAA_H0_T0_LHC11a_AOD113_noSDD_TPC_NTM_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD86_TPCOnly_NTM_JCIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD86_TPCOnly_NTM_phi15_JCIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_phi15_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD86_TPCOnly_NTM_phi25_JCIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_phi25_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/_AOD86_TPCOnly_NTM_zvtx8_JCIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_zvtx8_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	};
 
 	TObjArray *outString[Nsets];
@@ -85,10 +74,10 @@ void run2() {
 		outString[i] = infiles[i].Tokenize("/");
 		TString sDir = ((TObjString *)outString[i]->At(0))->GetString();
 		TString sName = ((TObjString *)outString[i]->At(1))->GetString();
-		outrootname[i] = Form("%s/Signal%s",sDir.Data(),sName.Data());
+		outrootname[i] = Form("%s/Signal_gaus%s",sDir.Data(),sName.Data());
 		//cout << outrootname[i] << endl;
 	}
-	for(int i=12;i<14;i++) { 
+	for(int i=0;i<1;i++) { 
 		DoAnalysis(infiles[i],outrootname[i]);
 	}
 //	DoAnalysis ("sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root","sysErrors/_Signal_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root");
@@ -160,7 +149,8 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 					// GG
 					fitname = Form("GG%02d%02d%02d%02d", idtyp, ic, iptt, ipta);
 					fGG[idtyp][ic][iptt][ipta]     = new TF1(fitname, FitGeneralizedGausPlusBG, 0, 1.6, 4); // 4 Parameters
-
+					fitname = Form("Gaus%02d%02d%02d%02d", idtyp, ic, iptt, ipta);
+					fGaus[idtyp][ic][iptt][ipta] = new TF1(fitname, "gaus(0)+[3]", 0, 1.6);
 					//estimate fit parametes
 					TH1D *hFlipDeta = (TH1D*) hDeltaEtaFlip[idtyp][ic][iptt][ipta];
 ////					TH1D *hFlipDeta = (TH1D*) hDeltaEta[idtyp][ic][iptt][ipta];
@@ -182,22 +172,36 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 					double peakAmpl = hFlipDeta->GetBinContent(hFlipDeta->FindBin(0))-bg;
           double beta = 1;
           double alpha = TMath::Sqrt(hFlipDeta->GetRMS()*0.5);
+		  double fwhm =  hFlipDeta->GetBinCenter(hFlipDeta->FindBin(0)) - hFlipDeta->GetBinCenter(hFlipDeta->FindLastBinAbove(hFlipDeta->GetMaximum()/2));
+
           fGG[idtyp][ic][iptt][ipta]->SetParameters(alpha, beta, 2*alpha*peakAmpl, bg);
           fGG[idtyp][ic][iptt][ipta]->SetParLimits(1, 0.05, 2.2);
+
+		  fGaus[idtyp][ic][iptt][ipta]->SetParameters(peakAmpl, 0, fwhm , bg);
+          //fGaus[idtyp][ic][iptt][ipta]->SetParLimits(1, 0.05, 2.2);
+
 //          fGG[idtyp][ic][iptt][ipta]->SetParLimits(0, 0.1, 1);
 //          fGG[idtyp][ic][iptt][ipta]->SetParLimits(3, 0, 1e10);
 
-          TString opt = "QS";
-          hFlipDeta->Fit( fGG[idtyp][ic][iptt][ipta], opt, "", 0, 1.5);
+          TString opt = "SQ";
+		  double ebg = 0;
+		  if (fitgaus == 0) {
+          hFlipDeta->Fit( fGG[idtyp][ic][iptt][ipta], opt, "", 0, cutFitRange);
 		  //cout << "Fit 1 " << endl;
-          hFlipDeta->Fit( fGG[idtyp][ic][iptt][ipta], opt, "", 0, 1.5);
+          hFlipDeta->Fit( fGG[idtyp][ic][iptt][ipta], opt, "", 0, cutFitRange);
+
 //		  		  cout << "Fit 2 " << endl;
 
-          
           bg = fGG[idtyp][ic][iptt][ipta]->GetParameter(3);
-          double ebg = fGG[idtyp][ic][iptt][ipta]->GetParError(3);
+          ebg = fGG[idtyp][ic][iptt][ipta]->GetParError(3);
+				} else {
+		  hFlipDeta->Fit(fGaus[idtyp][ic][iptt][ipta], opt, "", 0, cutFitRange);
+
+		  bg = fGaus[idtyp][ic][iptt][ipta]->GetParameter(3);
+		  ebg = fGaus[idtyp][ic][iptt][ipta]->GetParError(3);
+		  }
           hDeltaEtaSig[idtyp][ic][iptt][ipta] = SubtractBg(hFlipDeta, bg, ebg);
-		  )
+		  
 				} // ipta
 			} // iptt 
 		} // ic
@@ -255,8 +259,8 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	int iPTA=5;
 
 	//DrawBeforeFlip(iPTT, iPTA);
-	DrawAfterFlip(iPTT, iPTA);
-	//DrawSignal(iPTT, iPTA);
+	//DrawAfterFlip(iPTT, iPTA);
+	DrawSignal(iPTT, iPTA);
 
 	if(saveRoot) {
 		cout <<"Writing the results into a file..."<< endl;

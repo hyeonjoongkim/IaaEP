@@ -32,7 +32,7 @@ const int Nsysfile[Nsets] = {
     1, 2, 1, 1, 2 };                    // Variable set inside each systematics (usually 2 file)
 const int isp2p[Nsets] = {0, 0, 0, 0, 0}; // If it's p2p, put 1, else put 0
 
-TString defaultfile = "sysErrors/Signal_AOD160_TPConly_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root";
+TString defaultfile = "sysErrors/Signal_AOD86_TPCOnly_NTM_JCIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_Iaa_R0.2_1.0_1.60_Near_Wing0.root";
 TString systematicfile = "Systematic.root";
 
 TH1D *hSystematic_pbpFull[2][kCENT][kMAXD][kMAXD];
@@ -56,6 +56,7 @@ int NPTA;
 int iRef = 0;
 float *ptaborders;
 float *pttborders;
+float *centborders;
 
 void LoadData() {
     fdefault = TFile::Open(defaultfile);
@@ -71,6 +72,7 @@ void LoadData() {
   NPTA = AssocPtBorders->GetNoElements() - 1;
   pttborders = TriggPtBorders->GetMatrixArray();
   ptaborders = AssocPtBorders->GetMatrixArray();
+  centborders = CentBinBorders->GetMatrixArray();
   cout << "PbPb" << endl;
   cout << "bins:  c=" << NumCent[AA] << " ptt=" << NPTT << " pta=" << NPTA
        << endl;
@@ -162,15 +164,19 @@ void DrawSystematics() {
 LoadData();
 TCanvas *fpad[kCENT][kMAXD][kMAXD];
 lowx = -0.01;
-
-  for (int ic = 0; ic < 1; ++ic) {
-    for (int iptt = 3; iptt < NPTT; iptt++) {
-      for (int ipta = 0; ipta < NPTA; ipta++) {
+TLatex *l1 = new TLatex();
+  for (int ic = 5; ic < 6; ++ic) {
+    for (int iptt = 2; iptt < NPTT-1; iptt++) {
+      for (int ipta = 3; ipta < NPTA-1; ipta++) {
         if (pttborders[iptt] - ptaborders[ipta] < 0.000001)
           continue;
           fpad[ic][iptt][ipta] = new TCanvas(Form("canvas%02d%02d%02d", ic, iptt, ipta), Form("canvas%02d%02d%02d", ic, iptt, ipta), 800, 600);
           fpad[ic][iptt][ipta]->Draw();
           TPad *p = (TPad*)fpad[ic][iptt][ipta]->GetPad(0);
+          p->SetRightMargin(0.03);
+          p->SetTopMargin(0.03);
+          p->SetBottomMargin(0.12);
+          p->SetLeftMargin(0.12);
           p->SetTickx();
           p->cd();
           //    hy = hIAADeltaEtaSig[2][ic][iPTT][iPTA]->GetMaximum() * 1.2;
@@ -178,15 +184,20 @@ lowx = -0.01;
               new TH2F("hfr", " ", 100, lowx, highx, 10, lowIAA,
                        highIAA); // numbers: tics x, low limit x, upper limit
                                  // x, tics y, low limit y, upper limit y
-          hset(*hfr, "|#Delta#eta|", "I_{AA}", 1.1, 1.0, 0.09, 0.09, 0.01, 0.01,
+          hset(*hfr, "|#Delta#eta|", "I_{AA}", 0.7, 0.7, 0.07, 0.07, 0.01, 0.01,
                0.04, 0.05, 510,
                505); // settings of the upper pad: x-axis, y-axis
+                                                hfr->SetStats(0);
+
           hfr->Draw();
           hIAADeltaEtaSig_def[ic][iptt][ipta]->SetMarkerStyle(20);
-//          hIAADeltaEtaSig_def[ic][iptt][ipta]->Draw("same");
           gscaFull[ic][iptt][ipta]->Draw("2");
           gpbpFull[ic][iptt][ipta]->Draw("2");
-          
+          hIAADeltaEtaSig_def[ic][iptt][ipta]->Draw("same");
+	  l1->DrawLatex(0.03, 0.5, Form("%.0f-%.0f%% Pb-Pb / pp", centborders[ic], centborders[ic+1]));
+	  l1->DrawLatex(0.03, 0.38, Form("%.0f<p_{T,trig}<%.0f GeV/#it{c}", pttborders[iptt], pttborders[iptt+1]));
+	  l1->DrawLatex(0.03, 0.26, Form("%.0f<p_{T,assoc}<%.0f GeV/#it{c}", ptaborders[ipta], ptaborders[ipta+1]));
+    fpad[ic][iptt][ipta]->SaveAs(Form("plots/IAAWithSys_%02dC%02dT%02dA.png", ic, iptt, ipta));          
       }
     }
   }

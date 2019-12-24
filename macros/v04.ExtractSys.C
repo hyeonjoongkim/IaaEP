@@ -18,35 +18,38 @@ double highIAA = 2.2;
 TLatex latexRun;
 TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV";
 
-const int kMAXSys = 5;
-const int Nsets = 5; // Number of systematic sets
+const int kMAXSys = 6;
+const int Nsets = 6; // Number of systematic sets
 const int Nsysfile[Nsets] = {
-    1, 2, 1, 1, 2 };                    // Variable set inside each systematics (usually 2 file)
-const int isp2p[Nsets] = {0, 0, 0, 0, 0}; // If it's p2p, put 1, else put 0
+    1, 2, 1, 1, 2, 1 };                    // Variable set inside each systematics (usually 2 file)
+const int isp2p[Nsets] = {0, 0, 0, 0, 0, 1}; // If it's p2p, put 1, else put 0
 
-TString defaultfile = "sysErrors/Signal_AOD160_TPConly_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root";
+TString defaultfile = "sysErrors/Signal_AOD86_TPCOnly_NTM_JCIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_Iaa_R0.2_1.0_1.60_Near_Wing0.root";
 TString outfile = "Systematic.root";
 
 TString infiles[Nsets][3] = { // Nsets / Nsysfile
     { //"sysErrors/Signal_AOD86_RAA_JDiHadronIAA_RAA_H0_T0_LHC11a_AOD113_noSDD_RAA_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-    "sysErrors/Signal_AOD86_RAA_JDiHadronIAA_RAA_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+    "sysErrors/Signal_AOD86_RAA_NTM_JDiHadronIAA_RAA_H0_T0_LHC11a_AOD113_noSDD_TPC_NTM_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
     }, // Track Cut
     {
-      "sysErrors/Signal_AOD160_TPConly_phi15_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_phi15_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-"sysErrors/Signal_AOD160_TPConly_phi25_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_phi25_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+      "sysErrors/Signal_AOD86_TPCOnly_NTM_phi15_JCIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_phi15_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/Signal_AOD86_TPCOnly_NTM_phi25_JCIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_phi25_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
     }, // dphi
 
-    {"sysErrors/Signal_AOD160_TPConly_vtx8_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+    {"sysErrors/Signal_AOD86_TPCOnly_NTM_zvtx8_JCIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_zvtx8_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 
 }, // zvtx
 {
-  "sysErrors/Signal_AOD160_TPCOnly_NTM_JDiHadronIAA_TPCOnly_H0_T0_TM_LHC11a_AOD113_noSDD_GlobalSDD_NTM_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+  "sysErrors/Signal_AOD86_TPCOnly_NTM_JCIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 
 }, // Track Merging
 {
-  "sysErrors/Signal_FR1.4__AOD160_TPConly_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-"sysErrors/Signal_FR1.6__AOD160_TPConly_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-} // fit range
+  "sysErrors/Signal_FR1.4_AOD86_TPCOnly_NTM_JCIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+"sysErrors/Signal_FR1.6_AOD86_TPCOnly_NTM_JCIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+}, // fit range
+{
+"sysErrors/Signal_gaus_AOD86_TPCOnly_NTM_JCIAA_TPCOnly_H0_T0_LHC11a_AOD113_noSDD_GlobalSDD_NTM_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+} //gaussian
 
 //        "sysErrors/Signal_LHC10h_AOD86_MgFpMgFm_5217_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 //        "sysErrors/Signal_LHC10h_AOD86_MgFpMgFm_5217_JDiHadronIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
@@ -57,7 +60,7 @@ TFile *fin[Nsets][kMAXSys];
 TFile *fdefault;
 TFile *foutfile;
 
-TString sLeg[Nsets] = {"Track Cut", "DPhi", "ZVtx", "Track Merging", "FitRange"
+TString sLeg[Nsets][3] = { {"TPCOnly&GlobalSDD", "RAA&TPCOnly"}, {"DPhi 2.0", "DPhi1.5", "DPhi2.5"}, {"ZVtx10", "Zvtx8"}, {"NoTrackMerging", "TrackMerging on pp"}, {"FitRange1.5", "FitRange1.4", "FitRange1.6"},{"Fit GG", "Fit Gaus" } 
 };
 
 int gMarkers[] = {20, 24, 21, 25, 23, 27, 29, 30};
@@ -251,7 +254,7 @@ void LoadData()
 void Compare()
 {
   LoadData();
-  CalculateRatios(1, 3, 3);
+  CalculateRatios(1, 3, 3); // no meaning on numbers;;
 
   int ic = 0;
   for (int iptt = 3; iptt < NPTT; iptt++)
@@ -259,7 +262,10 @@ void Compare()
     for (int ipta = 4; ipta < 5; ipta++)
     {
        //DrawSignal(ic++, iptt, ipta, 0);
-       DrawIAA(ic, iptt, ipta, 1);
+       for (int iset = 5; iset < 6; iset++){
+       DrawIAA(ic, iptt, ipta, iset);
+
+       }
     }
   }
 }
@@ -300,7 +306,7 @@ void DrawSignal(int padID, int iPTT, int iPTA, int iSet)
     hDeltaEtaSig_def[AA][ic][iPTT][iPTA]->SetMarkerColor(gColors[4]);
     hDeltaEtaSig_def[AA][ic][iPTT][iPTA]->SetLineColor(gColors[4]);
     hDeltaEtaSig_def[AA][ic][iPTT][iPTA]->Draw("p,same");
-    leg->AddEntry(hDeltaEtaSig_def[AA][ic][iPTT][iPTA], sLeg[0], "pl");
+    leg->AddEntry(hDeltaEtaSig_def[AA][ic][iPTT][iPTA], sLeg[iSet][0], "pl");
 
     leg->Draw();
 
@@ -311,7 +317,7 @@ void DrawSignal(int padID, int iPTT, int iPTA, int iSet)
     p->SetLogx(0), p->SetLogy(0);
     p->cd();
     TH2F *hfr1 = new TH2F("hfr1", " ", 100, lowx, highx, 10, lowIAA, highIAA);
-    hset(*hfr1, "|#Delta#eta|", Form("Ratio to %s", sLeg[iRef].Data()), 1.1,
+    hset(*hfr1, "|#Delta#eta|", Form("Ratio to %s", sLeg[iSet][iRef].Data()), 1.1,
          1.0, 0.09, 0.09, 0.01, 0.01, 0.08, 0.08, 510, 505);
     hfr1->Draw();
     for (int isys = 0; isys < Nsysfile[iSet]; isys++)
@@ -360,7 +366,7 @@ void DrawSignal(int padID, int iPTT, int iPTA, int iSet)
     hDeltaEtaSig_def[pp][ic][iPTT][iPTA]->SetMarkerColor(gColors[iPTA]);
     hDeltaEtaSig_def[pp][ic][iPTT][iPTA]->SetLineColor(gColors[iPTA]);
     hDeltaEtaSig_def[pp][ic][iPTT][iPTA]->Draw("p,same");
-    leg->AddEntry(hDeltaEtaSig_def[pp][ic][iPTT][iPTA], sLeg[0], "pl");
+    leg->AddEntry(hDeltaEtaSig_def[pp][ic][iPTT][iPTA], sLeg[iSet][0], "pl");
 
     leg->Draw();
 
@@ -371,7 +377,7 @@ void DrawSignal(int padID, int iPTT, int iPTA, int iSet)
     p->SetLogx(0), p->SetLogy(0);
     p->cd();
     TH2F *hfr1 = new TH2F("hfr1", " ", 100, lowx, highx, 10, lowIAA, highIAA);
-    hset(*hfr1, "|#Delta#eta|", Form("Ratio to %s", sLeg[iRef].Data()), 1.1,
+    hset(*hfr1, "|#Delta#eta|", Form("Ratio to %s", sLeg[iSet][iRef].Data()), 1.1,
          1.0, 0.09, 0.09, 0.01, 0.01, 0.08, 0.08, 510, 505);
     hfr1->Draw();
     for (int isys = 0; isys < Nsysfile[iSet]; isys++)
@@ -417,8 +423,8 @@ void DrawIAA(int padID, int iPTT, int iPTA, int iSet)
 
     latexRun.DrawLatexNDC(0.25, 0.85, strRun);
 
-    leg->AddEntry((TObject *)NULL,
-                  hIAADeltaEtaSig_def[ic][iPTT][iPTA]->GetTitle(), "");
+    leg->AddEntry(hIAADeltaEtaSig_def[ic][iPTT][iPTA],
+                  "Default", "pl");
 
     hIAADeltaEtaSig_def[ic][iPTT][iPTA]->Draw("p,same");
     for (int isys = 0; isys < Nsysfile[iSet]; isys++)
@@ -427,7 +433,7 @@ void DrawIAA(int padID, int iPTT, int iPTA, int iSet)
             hIAADeltaEtaSig[iSet][isys][ic][iPTT][iPTA]->SetMarkerColor(gColors[isys]);
             hIAADeltaEtaSig[iSet][isys][ic][iPTT][iPTA]->SetLineColor(gColors[isys]);
             hIAADeltaEtaSig[iSet][isys][ic][iPTT][iPTA]->Draw("p,same");
-            leg->AddEntry(hIAADeltaEtaSig[iSet][isys][ic][iPTT][iPTA], sLeg[isys], "pl");
+            leg->AddEntry(hIAADeltaEtaSig[iSet][isys][ic][iPTT][iPTA], sLeg[iSet][isys+1], "pl");
     }
 
     leg->Draw();
@@ -439,7 +445,7 @@ void DrawIAA(int padID, int iPTT, int iPTA, int iSet)
     p->SetLogx(0), p->SetLogy(0);
     p->cd();
     TH2F *hfr1 = new TH2F("hfr1", " ", 100, lowx, highx, 10, lowIAA, highIAA);
-    hset(*hfr1, "|#Delta#eta|", Form("Ratio to %s", sLeg[iRef].Data()), 1.1,
+    hset(*hfr1, "|#Delta#eta|", Form("Ratio to %s", sLeg[iSet][iRef].Data()), 1.1,
          1.0, 0.09, 0.09, 0.01, 0.01, 0.08, 0.08, 510, 505);
     hfr1->Draw();
      for(int isys=0;isys<Nsysfile[iSet];isys++) {
